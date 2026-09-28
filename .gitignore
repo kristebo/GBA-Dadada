@@ -3,4 +3,5 @@
 /rom/*.gba
 /rom/*.map
 /cmake-build-*/
+/.devkitpro/
 .idea
