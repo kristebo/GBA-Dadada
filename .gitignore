@@ -2,6 +2,6 @@
 /rom/*.elf
 /rom/*.gba
 /rom/*.map
-/cmake-build-*/
+/cmakes-build-*/
 /.devkitpro/
-.idea
+/.idea/
