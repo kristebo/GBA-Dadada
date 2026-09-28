@@ -1,12 +1,11 @@
 #include <gba.h>
 #include "tg_logo.h"
-#include "glitch.h"
 #include "shadebob.h"
 
 static OBJATTR oam_buffer[128];
 
 enum {
-    COLOR_BG = RGB5(1, 2, 9),
+    COLOR_BG = RGB5(1, 7, 7),
     COLOR_PANEL = RGB5(3, 5, 16),
     COLOR_GRID = RGB5(5, 9, 22),
     COLOR_CYAN = RGB5(4, 25, 31),
@@ -14,12 +13,11 @@ enum {
     COLOR_MAGENTA = RGB5(31, 5, 22),
     COLOR_WHITE = RGB5(25, 28, 31),
     COLOR_MUTED = RGB5(11, 15, 22),
-    LOGO_FRAME_X = 88,
-    LOGO_FRAME_Y = 46,
-    LOGO_X = 88,
+    LOGO_FRAME_X = 104,
+    LOGO_FRAME_Y = 62,
+    LOGO_X = 104,
     OBJ_BITMAP_BASE_TILE = 512,
-    LOGO_TILES = 64,
-    GLITCH_FIRST_TILE = OBJ_BITMAP_BASE_TILE + LOGO_TILES,
+    LOGO_TILES = 16,
     LOGO_OAM_INDEX = 4,
     BOOT_SCREEN_FRAMES = 90,
     LOGO_SCENE_FRAMES = 400
@@ -153,7 +151,7 @@ static void draw_logo_frame(void) {
     draw_centered(148, "A DEMO FROM 2027", 1, COLOR_MUTED);
 
     oam_buffer[LOGO_OAM_INDEX].attr0 = OBJ_Y(LOGO_FRAME_Y) | ATTR0_COLOR_16 | ATTR0_SQUARE;
-    oam_buffer[LOGO_OAM_INDEX].attr1 = OBJ_X(LOGO_FRAME_X) | ATTR1_SIZE_64;
+    oam_buffer[LOGO_OAM_INDEX].attr1 = OBJ_X(LOGO_FRAME_X) | ATTR1_SIZE_32;
 }
 
 static void init_logo_sprite(void) {
@@ -164,17 +162,12 @@ static void init_logo_sprite(void) {
     SPRITE_PALETTE[32 + 15] = COLOR_MAGENTA;
     SPRITE_PALETTE[48 + 15] = COLOR_GOLD;
 
-    u32 *solid_tiles = (u32 *)BITMAP_OBJ_BASE_ADR + LOGO_TILES * 8;
-    for (int i = 0; i < 64; ++i) {
-        solid_tiles[i] = 0xFFFFFFFF;
-    }
-
     for (int i = 0; i < 128; ++i) {
         oam_buffer[i].attr0 = ATTR0_DISABLED;
     }
 
     oam_buffer[LOGO_OAM_INDEX].attr0 = ATTR0_DISABLED;
-    oam_buffer[LOGO_OAM_INDEX].attr1 = OBJ_X(LOGO_X) | ATTR1_SIZE_64;
+    oam_buffer[LOGO_OAM_INDEX].attr1 = OBJ_X(LOGO_X) | ATTR1_SIZE_32;
     oam_buffer[LOGO_OAM_INDEX].attr2 = OBJ_CHAR(OBJ_BITMAP_BASE_TILE) | OBJ_PRIORITY(0);
     oam_buffer[LOGO_OAM_INDEX].dummy = 0;
 }
@@ -195,8 +188,8 @@ int main(void) {
     draw_logo_frame();
     for (u16 frame = 0; frame < LOGO_SCENE_FRAMES; ++frame) {
         VBlankIntrWait();
-        // glitch_update(oam_buffer, frame, LOGO_OAM_INDEX,
-        //               LOGO_FRAME_X, LOGO_FRAME_Y, GLITCH_FIRST_TILE);
+        /* Glitch effect (source/effects/glitch.c) intentionally not
+           wired in yet. */
         dmaCopy(oam_buffer, OAM, sizeof(oam_buffer));
     }
 

@@ -8,9 +8,9 @@ enum {
 
 static void set_glitch_bar(OBJATTR *oam, int index, int x, int y,
                             int color_bank, int tile_base) {
-    oam[index].attr0 = OBJ_Y(y) | ATTR0_COLOR_16 | ATTR0_WIDE;
+    oam[index].attr0 = OBJ_Y(y) | ATTR0_COLOR_16 | ATTR0_SQUARE;
     oam[index].attr1 = OBJ_X(x) | ATTR1_SIZE_32;
-    oam[index].attr2 = OBJ_CHAR(tile_base + index * 4)
+    oam[index].attr2 = OBJ_CHAR(tile_base + index * GLITCH_BAR_TILES)
                      | OBJ_PALETTE(color_bank);
     oam[index].dummy = 0;
 }
@@ -23,7 +23,7 @@ void glitch_update(OBJATTR *oam, u16 frame,
               && phase < GLITCH_START_FRAME + GLITCH_LENGTH;
 
     if (!active) {
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < GLITCH_BAR_COUNT; ++i) {
             oam[i].attr0 = ATTR0_DISABLED;
         }
         oam[target_index].attr1 = OBJ_X(target_x) | ATTR1_SIZE_64;

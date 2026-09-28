@@ -1,0 +1,6 @@
+/build/
+/rom/*.elf
+/rom/*.gba
+/rom/*.map
+/cmake-build-*/
+.idea
